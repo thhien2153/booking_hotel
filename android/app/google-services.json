@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "601096685939",
+    "project_id": "thigiuaky-bf69f",
+    "storage_bucket": "thigiuaky-bf69f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601096685939:android:7fa9e5288c18d5e8ccdd06",
+        "android_client_info": {
+          "package_name": "com.example.bookinghotel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAag3_gRIbRwLdE0D7e6c13RaTDs3beydo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
