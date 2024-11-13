@@ -1,10 +1,31 @@
+import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/posting_model.dart';
 import 'package:bookinghotel/view/widgets/posting_info_tile_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class PostingReport {
+  final String userId;
+  final String postId;
+
+  PostingReport({required this.userId, required this.postId});
+
+  Future<void> submitReport() async {
+    try {
+      await FirebaseFirestore.instance.collection('postReports').add({
+        'userId': userId,
+        'postId': postId,
+        'timestamp': Timestamp.now(),
+      });
+    } catch (error) {
+      print("Error reporting post: $error");
+    }
+  }
+}
 
 class ViewPostingScreen extends StatefulWidget {
-  PostingModel? posting;
-  ViewPostingScreen({super.key, this.posting});
+  final PostingModel? posting;
+  ViewPostingScreen({Key? key, this.posting}) : super(key: key);
 
   @override
   State<ViewPostingScreen> createState() => _ViewPostingScreenState();
@@ -15,20 +36,26 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
 
   getRequiredInfo() async {
     await posting!.getAllImagesFromStorage();
-
     await posting!.getHostFromFirestore();
-
     setState(() {});
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     posting = widget.posting;
-
     getRequiredInfo();
+  }
+
+  void reportPost() {
+    final report = PostingReport(
+      userId: AppConstants.currentUser.id!,
+      postId: posting!.id!,
+    );
+    report.submitReport();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Post reported successfully.')),
+    );
   }
 
   @override
@@ -43,43 +70,52 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
         title: Text('Posting Information'),
         actions: [
           IconButton(
-              icon: const Icon(Icons.save, color: Colors.white),
-              onPressed: () {}),
+            icon: const Icon(Icons.save, color: Colors.white),
+            onPressed: () {
+              // Save action
+            },
+          ),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'Report') {
+                reportPost();
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'Report',
+                  child: Text('Report'),
+                ),
+              ];
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            //Listing Image
+            // Listing Image
             AspectRatio(
               aspectRatio: 3 / 2,
               child: PageView.builder(
-                  itemCount: posting!.displayImages!.length,
-                  itemBuilder: (context, index) {
-                    MemoryImage currentImage = posting!.displayImages![index];
-                    return Image(
-                      image: currentImage,
-                      fit: BoxFit.fill,
-                    );
-                  }),
+                itemCount: posting!.displayImages!.length,
+                itemBuilder: (context, index) {
+                  MemoryImage currentImage = posting!.displayImages![index];
+                  return Image(image: currentImage, fit: BoxFit.fill);
+                },
+              ),
             ),
-
-            //Posting Name btn //book now btn
-            // description - profile pic
-            //apartments - beds - bathrooms
-            //amnities
-            //the location
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //Posting Name and price  //book now btn
+                  // Posting Name, Price and Book Now Button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      // Sử dụng Expanded để phần văn bản có đủ không gian
+                    children: [
                       Expanded(
                         child: Text(
                           posting!.name!.toUpperCase(),
@@ -91,15 +127,12 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-
-                      // Book now và giá
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
+                        children: [
                           Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.green,
-                            ),
+                            decoration:
+                                const BoxDecoration(color: Colors.green),
                             child: MaterialButton(
                               onPressed: () {},
                               child: const Text(
@@ -117,8 +150,7 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                       ),
                     ],
                   ),
-
-                  // description - profile pic and name
+                  // Description, Host Profile Picture, and Name
                   Padding(
                     padding: const EdgeInsets.only(top: 25.0, bottom: 25.0),
                     child: Row(
@@ -130,9 +162,7 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                           child: Text(
                             posting!.description!,
                             textAlign: TextAlign.justify,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                            style: const TextStyle(fontSize: 14),
                             maxLines: 5,
                           ),
                         ),
@@ -156,8 +186,7 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                               child: Text(
                                 posting!.host!.getFullNameOfUser(),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -165,8 +194,7 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                       ],
                     ),
                   ),
-
-                  //apartments - beds - bathrooms
+                  // Apartments, Beds, Bathrooms Information
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: ListView(
@@ -191,16 +219,11 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                       ],
                     ),
                   ),
-
-                  //amnities
+                  // Amenities
                   const Text(
                     'Amenities: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0, bottom: 25),
                     child: GridView.count(
@@ -230,14 +253,12 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                       ),
                     ),
                   ),
-
+                  // Location
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 10),
                     child: Text(
                       posting!.getFullAddress(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                 ],

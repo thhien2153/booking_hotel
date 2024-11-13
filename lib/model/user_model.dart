@@ -20,6 +20,8 @@ class UserModel extends ContactModel {
 
   List<PostingModel>? myPostings;
 
+  String? role;
+
   UserModel({
     String super.id,
     String super.firstName,

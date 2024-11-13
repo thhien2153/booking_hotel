@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bookinghotel/model/app_constants.dart';
+import 'package:bookinghotel/view/admin_screen/adminbottomnav.dart';
 import 'package:bookinghotel/view/guestScreens/account_screen.dart';
 import 'package:bookinghotel/view/guest_home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +18,7 @@ class UserViewModel {
 
   signUp(email, password, firstName, lastName, city, country, bio,
       imageFileOfUser) async {
-    Get.snackbar("Please wait", "your account is creating.");
+    Get.snackbar("Please wait", "Your account is being created.");
 
     try {
       await FirebaseAuth.instance
@@ -37,13 +38,13 @@ class UserViewModel {
         AppConstants.currentUser.email = email;
         AppConstants.currentUser.password = password;
 
-        await saveUserToFilestore(
+        await saveUserToFirestore(
                 bio, city, country, email, firstName, lastName, currentUserID)
             .whenComplete(() async {
           addImageToFirebaseStorage(imageFileOfUser, currentUserID);
         });
 
-        Get.snackbar("Congratulations", "your account has been created.");
+        Get.snackbar("Congratulations", "Your account has been created.");
       });
     } catch (e) {
       Get.to(const GuestHomeScreen());
@@ -51,7 +52,7 @@ class UserViewModel {
     }
   }
 
-  Future<void> saveUserToFilestore(
+  Future<void> saveUserToFirestore(
       bio, city, country, email, firstName, lastName, id) async {
     Map<String, dynamic> dataMap = {
       "bio": bio,
@@ -63,7 +64,8 @@ class UserViewModel {
       "isHost": false,
       "myPostingIDs": [],
       "savedPostingIDs": [],
-      "earnings": 0
+      "earnings": 0,
+      "role": "user" // Added role field with default value 'user'
     };
 
     await FirebaseFirestore.instance.collection("users").doc(id).set(dataMap);
@@ -94,20 +96,26 @@ class UserViewModel {
         String currentUserID = result.user!.uid;
         AppConstants.currentUser.id = currentUserID;
 
-        await getUserInforFirestore(currentUserID);
+        await getUserInfoFromFirestore(currentUserID);
         await getImageFromStorage(currentUserID);
 
         await AppConstants.currentUser.getMyPostingsFromFirestore();
 
-        Get.snackbar("Login Successful", "You have logged in successfully");
-        Get.to(const GuestHomeScreen());
+        // Check role and navigate accordingly
+        if (AppConstants.currentUser.role == "user") {
+          Get.snackbar("Login Successful", "You have logged in successfully");
+          Get.to(const GuestHomeScreen());
+        } else if (AppConstants.currentUser.role == "admin") {
+          Get.snackbar("Login Successful", "Welcome, Admin");
+          Get.to(Bottomnav());
+        }
       });
     } catch (e) {
       Get.snackbar("Error!!!", e.toString());
     }
   }
 
-  getUserInforFirestore(userID) async {
+  Future<void> getUserInfoFromFirestore(String userID) async {
     DocumentSnapshot snapshot =
         await FirebaseFirestore.instance.collection('users').doc(userID).get();
     AppConstants.currentUser.snapshot = snapshot;
@@ -118,6 +126,7 @@ class UserViewModel {
     AppConstants.currentUser.city = snapshot['city'] ?? "";
     AppConstants.currentUser.country = snapshot['country'] ?? "";
     AppConstants.currentUser.isHost = snapshot['isHost'] ?? false;
+    AppConstants.currentUser.role = snapshot['role'] ?? "";
   }
 
   getImageFromStorage(userID) async {

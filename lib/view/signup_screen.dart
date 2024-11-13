@@ -250,7 +250,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     _cityTextEditingController.text.trim(),
                     _countryTextEditingController.text.trim(),
                     _bioTextEditingController.text.trim(),
-                    imageFileOfUser,
+                    imageFileOfUser!,
                   );
                 },
                 style: ElevatedButton.styleFrom(
