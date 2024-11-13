@@ -1,9 +1,12 @@
+import 'package:bookinghotel/global.dart';
+import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/booking_model.dart';
 import 'package:bookinghotel/model/contact_model.dart';
 import 'package:bookinghotel/model/review_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
 class PostingModel {
   String? id;
@@ -179,5 +182,57 @@ class PostingModel {
 
   String getFullAddress() {
     return address! + ", " + city! + ", " + country!;
+  }
+
+  getAllBookingsFromFirestore() async {
+    bookings = [];
+
+    QuerySnapshot snapshots = await FirebaseFirestore.instance
+        .collection('postings')
+        .doc(id)
+        .collection('bookings')
+        .get();
+
+    for (var snapshot in snapshots.docs) {
+      BookingModel newBooking = BookingModel();
+
+      await newBooking.getBookingInfoFromFirestoreFromPosting(this, snapshot);
+
+      bookings!.add(newBooking);
+    }
+  }
+
+  List<DateTime> getAllBookedDates() {
+    List<DateTime> dates = [];
+
+    bookings!.forEach((booking) {
+      dates.addAll(booking.dates!);
+    });
+    return dates;
+  }
+
+  Future<void> makeNewBooking(List<DateTime> dates, context, hostID) async {
+    Map<String, dynamic> bookingData = {
+      'dates': dates,
+      'name': AppConstants.currentUser.getFullNameOfUser(),
+      'userID': AppConstants.currentUser.id,
+      'payment': bookingPrice,
+    };
+    DocumentReference reference = await FirebaseFirestore.instance
+        .collection('posting')
+        .doc(id)
+        .collection('booking')
+        .add(bookingData);
+    BookingModel newBooking = BookingModel();
+
+    newBooking.createBooking(
+        this, AppConstants.currentUser.createUserFormContact(), dates);
+    newBooking.id = reference.id;
+
+    bookings!.add(newBooking);
+    await AppConstants.currentUser
+        .addBookingToFirestore(newBooking, bookingPrice!, hostID);
+
+    Get.snackbar("Listing", "Booked succesfully");
   }
 }

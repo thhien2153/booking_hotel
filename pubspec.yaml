@@ -43,6 +43,7 @@ dependencies:
   firebase_storage: ^12.3.3
   image_picker: ^1.1.2
   custom_rating_bar: ^3.0.0
+  pay: ^2.0.0
 
 dev_dependencies:
   flutter_test:

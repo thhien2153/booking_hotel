@@ -1,6 +1,9 @@
+import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/posting_model.dart';
+import 'package:bookinghotel/view/guestScreens/book_listing_screen.dart';
 import 'package:bookinghotel/view/widgets/posting_info_tile_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ViewPostingScreen extends StatefulWidget {
   PostingModel? posting;
@@ -44,7 +47,9 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
         actions: [
           IconButton(
               icon: const Icon(Icons.save, color: Colors.white),
-              onPressed: () {}),
+              onPressed: () {
+                AppConstants.currentUser.addSavePosting(posting!);
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -101,7 +106,11 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                               color: Colors.green,
                             ),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(BookListingScreen(
+                                    posting: posting,
+                                    hostID: posting!.host!.id!));
+                              },
                               child: const Text(
                                 'Book now',
                                 style: TextStyle(color: Colors.white),
