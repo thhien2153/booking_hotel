@@ -7,6 +7,7 @@ import 'package:bookinghotel/view/guest_home_screen.dart';
 import 'package:bookinghotel/view/widgets/calender_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pay/pay.dart';
 
 class BookListingScreen extends StatefulWidget {
   final PostingModel? posting;

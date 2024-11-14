@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_core: ^3.6.0
   cloud_firestore: ^5.4.4
-  curved_navigation_bar: ^1.0.6
+  
 
   font_awesome_flutter: '>= 5.0.0' 
   percent_indicator: ^4.2.2
@@ -50,6 +50,7 @@ dependencies:
   image_picker: ^1.1.2
   custom_rating_bar: ^3.0.0
   pay: ^2.0.0
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
