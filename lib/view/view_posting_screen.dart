@@ -1,7 +1,9 @@
 import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/posting_model.dart';
+import 'package:bookinghotel/view/guestScreens/book_listing_screen.dart';
 import 'package:bookinghotel/view/widgets/posting_info_tile_ui.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostingReport {
@@ -22,6 +24,9 @@ class PostingReport {
     }
   }
 }
+=======
+import 'package:get/get.dart';
+>>>>>>> 5986aca79fcbd47595a2480698449bd367bed66b
 
 class ViewPostingScreen extends StatefulWidget {
   final PostingModel? posting;
@@ -70,6 +75,7 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
         title: Text('Posting Information'),
         actions: [
           IconButton(
+<<<<<<< HEAD
             icon: const Icon(Icons.save, color: Colors.white),
             onPressed: () {
               // Save action
@@ -90,6 +96,12 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
               ];
             },
           ),
+=======
+              icon: const Icon(Icons.save, color: Colors.white),
+              onPressed: () {
+                AppConstants.currentUser.addSavePosting(posting!);
+              }),
+>>>>>>> 5986aca79fcbd47595a2480698449bd367bed66b
         ],
       ),
       body: SingleChildScrollView(
@@ -134,7 +146,11 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                             decoration:
                                 const BoxDecoration(color: Colors.green),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(BookListingScreen(
+                                    posting: posting,
+                                    hostID: posting!.host!.id!));
+                              },
                               child: const Text(
                                 'Book now',
                                 style: TextStyle(color: Colors.white),
