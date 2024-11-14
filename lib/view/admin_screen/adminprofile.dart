@@ -2,7 +2,7 @@ import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/view/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// Import your LoginScreen here
+// Adjust this import
 
 class AdminProfile extends StatefulWidget {
   const AdminProfile({super.key});
@@ -14,7 +14,11 @@ class AdminProfile extends StatefulWidget {
 class _AdminProfileState extends State<AdminProfile> {
   // Method to fetch user data from Firestore
   Future<DocumentSnapshot> _getUserData() async {
-    String? userId = AppConstants.currentUser.id; // Get the current user ID
+    // Ensure AppConstants.currentUser.id is not null
+    if (AppConstants.currentUser.id == null) {
+      throw Exception('User ID is null, please log in first');
+    }
+    String userId = AppConstants.currentUser.id!; // Get current user ID
     return await FirebaseFirestore.instance
         .collection("users")
         .doc(userId)
@@ -26,27 +30,24 @@ class _AdminProfileState extends State<AdminProfile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Admin Profile"),
-        backgroundColor: Colors.green, // Customizing app bar color
+        backgroundColor: Colors.green,
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: _getUserData(),
         builder: (context, snapshot) {
-          // Show loading indicator while waiting for data
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Handle errors
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          // Check if document exists or if there's no data
           if (!snapshot.hasData || !snapshot.data!.exists) {
             return const Center(child: Text("User data not found"));
           }
 
-          // Extracting user data from Firestore snapshot
+          // Extract user data from Firestore
           var userData = snapshot.data!;
           var firstName = userData['firstName'] ?? 'N/A';
           var lastName = userData['lastName'] ?? 'N/A';
@@ -90,8 +91,7 @@ class _AdminProfileState extends State<AdminProfile> {
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Logout action: navigate to LoginScreen
-                      // You might want to clear user session data if you're using any
+                      // Ensure user is logged out and session is cleared
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -99,7 +99,7 @@ class _AdminProfileState extends State<AdminProfile> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red, // Button color
+                      backgroundColor: Colors.red,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
