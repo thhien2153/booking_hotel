@@ -1,5 +1,7 @@
+import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/booking_model.dart';
 import 'package:bookinghotel/model/contact_model.dart';
+import 'package:bookinghotel/model/conversation_model.dart';
 import 'package:bookinghotel/model/posting_model.dart';
 import 'package:bookinghotel/model/review_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -64,6 +66,7 @@ class UserModel extends ContactModel {
     for (String postingID in myPostingIDs) {
       PostingModel posting = PostingModel(id: postingID);
       await posting.getPostingInfoFromFirestore();
+      await posting.getAllBookingsFromFirestore();
       await posting.getAllImagesFromStorage();
 
       myPostings!.add(posting);
@@ -122,17 +125,44 @@ class UserModel extends ContactModel {
         .set(data);
 
     String earningOld = "";
+
     await FirebaseFirestore.instance
         .collection("user")
-        .doc(id)
+        .doc(hostID)
         .get()
         .then((dataSnap) {
       earningOld = dataSnap["earnings"].toString();
     });
 
-    await FirebaseFirestore.instance.collection("users").doc(id).update({
+    await FirebaseFirestore.instance.collection("users").doc(hostID).update({
       "earnings": totalPriceForAllNights + int.parse(earningOld),
     });
     bookings!.add(booking);
+
+    await addBookingConversation(booking);
+  }
+
+  addBookingConversation(BookingModel booking) async {
+    ConversationModel conversation = ConversationModel();
+    conversation.addConversationToFirestore(booking.posting!.host!);
+
+    String textMessage =
+        "Hi my name is ${AppConstants.currentUser!.firstName} and I have"
+        "just booked ${booking.posting!.name} from ${booking.dates!.first} to"
+        "${booking.dates!.last} if you have any questions contact me. Enjoy your"
+        "stay!";
+
+    await conversation.addMessageToFirestore(textMessage);
+  }
+
+  List<DateTime> getAllBookedDates() {
+    List<DateTime> allBookedDates = [];
+    myPostings!.forEach((posting) {
+      posting.bookings!.forEach((booking) {
+        allBookedDates.addAll(booking.dates!);
+      });
+    });
+
+    return allBookedDates;
   }
 }

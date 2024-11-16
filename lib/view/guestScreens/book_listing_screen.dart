@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:bookinghotel/global.dart';
+import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/model/posting_model.dart';
-import 'package:bookinghotel/payment_gateway/payment_config.dart';
-import 'package:bookinghotel/view/guest_home_screen.dart';
 import 'package:bookinghotel/view/widgets/calender_ui.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pay/pay.dart';
 
 class BookListingScreen extends StatefulWidget {
   final PostingModel? posting;
@@ -28,29 +26,17 @@ class _BookListingScreenState extends State<BookListingScreen> {
   List<DateTime> bookedDates = [];
   List<DateTime> selectedDates = [];
   List<CalenderUI> calendarWidgets = [];
-  double bookingPrice = 0.0;
-  String paymentResult = "";
-
-  @override
-  void initState() {
-    super.initState();
-    posting = widget.posting;
-    _localBookedDates();
-  }
 
   _buildCalendarWidgets() {
-    calendarWidgets.clear();
     for (int i = 0; i < 12; i++) {
-      calendarWidgets.add(
-        CalenderUI(
-          monthIndex: i,
-          bookedDates: bookedDates,
-          selectDate: _selectDate,
-          getSelectedDates: _getSelectedDates,
-        ),
-      );
+      calendarWidgets.add(CalenderUI(
+        monthIndex: i,
+        bookedDates: bookedDates,
+        selectDate: _selectDate,
+        getSelectedDates: _getSelectedDates,
+      ));
+      setState(() {});
     }
-    setState(() {});
   }
 
   List<DateTime> _getSelectedDates() {
@@ -69,33 +55,210 @@ class _BookListingScreenState extends State<BookListingScreen> {
 
   _localBookedDates() async {
     try {
-      await posting!.getAllBookingsFromFirestore();
-      bookedDates = posting!.getAllBookedDates();
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('postings')
+          .doc(posting!.id)
+          .collection('bookings')
+          .get();
+
+      for (var doc in snapshot.docs) {
+        List<dynamic> dates = doc['dates'];
+        dates.forEach((date) {
+          bookedDates.add(DateTime.parse(date));
+        });
+      }
+
       _buildCalendarWidgets();
     } catch (error) {
       print("Error fetching booked dates: $error");
     }
   }
 
-  _makeBooking() async {
-    if (selectedDates.isEmpty) return;
-
-    try {
-      await posting!.makeNewBooking(selectedDates, context, widget.hostID);
-      Get.back();
-    } catch (error) {
-      print("Error making booking: $error");
-    }
+  @override
+  void initState() {
+    super.initState();
+    posting = widget.posting;
+    _localBookedDates();
   }
 
-  calculateAmountForOverAllStay() {
-    if (selectedDates.isNotEmpty) {
-      double totalPriceForAllNights =
-          selectedDates.length * (posting!.price ?? 0);
-      setState(() {
-        bookingPrice = totalPriceForAllNights;
-      });
-    }
+  void _showBookingDetailsDialog() {
+    final TextEditingController idController = TextEditingController();
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController phoneController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController noteController = TextEditingController();
+
+    String checkInDate = selectedDates.isNotEmpty
+        ? selectedDates.first.toString().split(' ')[0]
+        : "Not selected";
+    String checkOutDate = selectedDates.length > 1
+        ? selectedDates.last.toString().split(' ')[0]
+        : "Not selected";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Enter Personal Information",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTextField(
+                    controller: idController,
+                    hintText: "Identification Code",
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    controller: nameController,
+                    hintText: "Full Name",
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    controller: phoneController,
+                    hintText: "Phone Number",
+                    keyboardType: TextInputType.phone,
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    controller: emailController,
+                    hintText: "Email",
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    readOnly: true,
+                    hintText: "Check-in Date",
+                    labelText: checkInDate,
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    readOnly: true,
+                    hintText: "Check-out Date",
+                    labelText: checkOutDate,
+                  ),
+                  const SizedBox(height: 15),
+                  _buildTextField(
+                    controller: noteController,
+                    hintText: "Notes (optional)",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              child: Text("Confirm"),
+              onPressed: () async {
+                if (idController.text.isEmpty ||
+                    nameController.text.isEmpty ||
+                    phoneController.text.isEmpty ||
+                    emailController.text.isEmpty ||
+                    selectedDates.isEmpty) {
+                  Get.snackbar(
+                    "Error",
+                    "Please fill in all required fields.",
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                } else {
+                  try {
+                    // Ép kiểu userID thành String
+                    String userID = AppConstants.currentUser.id ?? '';
+
+                    // Tạo dữ liệu đặt phòng
+                    Map<String, dynamic> bookingData = {
+                      'dates': selectedDates
+                          .map((date) => date.toIso8601String())
+                          .toList(),
+                      'name': nameController.text,
+                      'userID': userID,
+                      'postingID': widget.posting!.id,
+                      'phone': phoneController.text,
+                      'email': emailController.text,
+                      'note': noteController.text,
+                      'createdAt': DateTime.now().toIso8601String(),
+                    };
+
+                    // Lưu thông tin đặt phòng vào bảng bookings
+                    await FirebaseFirestore.instance
+                        .collection('bookings')
+                        .add(bookingData);
+
+                    // Hiển thị thông báo thành công
+                    Get.snackbar(
+                      "Success",
+                      "Your booking has been confirmed!",
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                    );
+
+                    // Đóng dialog
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    // Hiển thị thông báo lỗi
+                    Get.snackbar(
+                      "Error",
+                      "Failed to save booking. Please try again.",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildTextField({
+    TextEditingController? controller,
+    String? hintText,
+    String? labelText,
+    TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFececf8),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hintText,
+          labelText: labelText,
+          hintStyle: TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
   }
 
   @override
@@ -108,7 +271,7 @@ class _BookListingScreenState extends State<BookListingScreen> {
           ),
         ),
         title: Text(
-          "Book ${posting?.name ?? ''}",
+          "Book ${posting!.name}",
           style: const TextStyle(
             color: Colors.white,
             fontSize: 21,
@@ -144,84 +307,18 @@ class _BookListingScreenState extends State<BookListingScreen> {
                       },
                     ),
             ),
-            bookingPrice == 0.0
+            selectedDates.isNotEmpty
                 ? MaterialButton(
-                    onPressed: calculateAmountForOverAllStay,
+                    onPressed: _showBookingDetailsDialog,
                     minWidth: double.infinity,
                     height: MediaQuery.of(context).size.height / 14,
                     color: Colors.green,
                     child: const Text(
-                      'Proceed',
+                      'Book Now',
                       style: TextStyle(color: Colors.white),
                     ),
                   )
                 : Container(),
-            paymentResult.isNotEmpty
-                ? MaterialButton(
-                    onPressed: () {
-                      Get.to(GuestHomeScreen());
-                    },
-                    minWidth: double.infinity,
-                    height: MediaQuery.of(context).size.height / 14,
-                    color: Colors.green,
-                    child: const Text(
-                      'Amount paid successfully',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : Container(),
-            bookingPrice == 0.0
-                ? Container()
-                : Platform.isIOS
-                    ? ApplePayButton(
-                        paymentConfiguration:
-                            PaymentConfiguration.fromJsonString(
-                                defaultApplePay),
-                        paymentItems: [
-                          PaymentItem(
-                            label: 'Booking Amount',
-                            amount: bookingPrice.toString(),
-                            status: PaymentItemStatus.final_price,
-                          ),
-                        ],
-                        style: ApplePayButtonStyle.black,
-                        width: double.infinity,
-                        height: 50,
-                        type: ApplePayButtonType.buy,
-                        margin: const EdgeInsets.only(top: 15.0),
-                        onPaymentResult: (result) {
-                          setState(() {
-                            paymentResult = result.toString();
-                          });
-                          _makeBooking();
-                        },
-                        loadingIndicator: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : GooglePayButton(
-                        paymentConfiguration:
-                            PaymentConfiguration.fromJsonString(
-                                defaultGooglePay),
-                        paymentItems: [
-                          PaymentItem(
-                            label: 'Total Amount',
-                            amount: bookingPrice.toString(),
-                            status: PaymentItemStatus.final_price,
-                          ),
-                        ],
-                        type: GooglePayButtonType.pay,
-                        margin: const EdgeInsets.only(top: 15.0),
-                        onPaymentResult: (result) {
-                          setState(() {
-                            paymentResult = result.toString();
-                          });
-                          _makeBooking();
-                        },
-                        loadingIndicator: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
           ],
         ),
       ),

@@ -26,8 +26,11 @@ class PostingReport {
 }
 
 class ViewPostingScreen extends StatefulWidget {
-  final PostingModel? posting;
-  ViewPostingScreen({Key? key, this.posting}) : super(key: key);
+  // final PostingModel? posting;
+  // ViewPostingScreen({Key? key, this.posting}) : super(key: key);
+
+  PostingModel? posting;
+  ViewPostingScreen({super.key, this.posting});
 
   @override
   State<ViewPostingScreen> createState() => _ViewPostingScreenState();

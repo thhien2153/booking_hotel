@@ -98,8 +98,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    color:
-                        isNameButtonSelected ? Colors.pinkAccent : Colors.white,
+                    color: isNameButtonSelected ? Colors.green : Colors.white,
                     child: const Text("Name"),
                   ),
                   const SizedBox(width: 10),
@@ -109,8 +108,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    color:
-                        isCityButtonSelected ? Colors.pinkAccent : Colors.white,
+                    color: isCityButtonSelected ? Colors.green : Colors.white,
                     child: const Text("City"),
                   ),
                   const SizedBox(width: 10),
@@ -120,8 +118,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    color:
-                        isTypeButtonSelected ? Colors.pinkAccent : Colors.white,
+                    color: isTypeButtonSelected ? Colors.green : Colors.white,
                     child: const Text("Type"),
                   ),
                   const SizedBox(width: 10),
