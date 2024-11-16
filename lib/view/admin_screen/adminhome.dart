@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class AdminHome extends StatefulWidget {
@@ -9,6 +10,32 @@ class AdminHome extends StatefulWidget {
 }
 
 class _AdminHomeState extends State<AdminHome> {
+  int userCount = 0;
+  int postingCount = 0;
+  int bookingCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    // Fetch user count
+    var userSnapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+    var postingSnapshot =
+        await FirebaseFirestore.instance.collection('postings').get();
+    var bookingSnapshot =
+        await FirebaseFirestore.instance.collection('bookings').get();
+
+    setState(() {
+      userCount = userSnapshot.docs.length;
+      postingCount = postingSnapshot.docs.length;
+      bookingCount = bookingSnapshot.docs.length;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,17 +80,19 @@ class _AdminHomeState extends State<AdminHome> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoCard('0', "Người dùng", Colors.blue),
-                _buildInfoCard('0', "Đơn hàng", Colors.purple),
+                _buildInfoCard(userCount.toString(), "Người dùng", Colors.blue),
+                _buildInfoCard(
+                    postingCount.toString(), "Bài Đăng", Colors.purple),
               ],
             ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildCircularIndicator("Đặt hàng", 0.05, Colors.blue),
-                _buildCircularIndicator("Thêm giỏ hàng", 0.22, Colors.purple),
-                _buildCircularIndicator("Tạo blog", 0.62, Colors.green),
+                _buildCircularIndicator(
+                    "booking", bookingCount / 100.0, Colors.blue),
+                _buildCircularIndicator(
+                    "Tạo bài đăng", postingCount / 100.0, Colors.green),
               ],
             ),
             SizedBox(height: 20),
