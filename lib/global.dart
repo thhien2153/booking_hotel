@@ -8,3 +8,4 @@ PostingViewModel postingViewModel = PostingViewModel();
 
 String paymentResult = "";
 double? bookingPrice = 0;
+String hostID = "";

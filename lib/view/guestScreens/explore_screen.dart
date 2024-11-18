@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -20,7 +19,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   bool isNameButtonSelected = false;
   bool isCityButtonSelected = false;
-  bool isTypeButtonSelected = false;
+  bool isPriceButtonSelected = false;
 
   Future<String?> getImageUrl(String? imageName, String? postingId) async {
     if (imageName == null || postingId == null) return null;
@@ -40,20 +39,32 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void searchByField() {
     setState(() {
-      stream = FirebaseFirestore.instance
-          .collection('postings')
-          .where(searchType, isEqualTo: controllerSearch.text)
-          .snapshots();
+      if (searchType.isNotEmpty) {
+        if (searchType == "price") {
+          double? price = double.tryParse(controllerSearch.text);
+          if (price != null) {
+            stream = FirebaseFirestore.instance
+                .collection('postings')
+                .where(searchType, isEqualTo: price)
+                .snapshots();
+          }
+        } else {
+          stream = FirebaseFirestore.instance
+              .collection('postings')
+              .where(searchType, isEqualTo: controllerSearch.text)
+              .snapshots();
+        }
+      }
     });
   }
 
   void pressSearchByButton(String searchTypeStr, bool isNameButtonSelectedB,
-      bool isCityButtonSelectedB, bool isTypeButtonSelectedB) {
+      bool isCityButtonSelectedB, bool isPriceButtonSelectedB) {
     setState(() {
       searchType = searchTypeStr;
       isNameButtonSelected = isNameButtonSelectedB;
       isCityButtonSelected = isCityButtonSelectedB;
-      isTypeButtonSelected = isTypeButtonSelectedB;
+      isPriceButtonSelected = isPriceButtonSelectedB;
     });
   }
 
@@ -114,12 +125,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   const SizedBox(width: 10),
                   MaterialButton(
                     onPressed: () {
-                      pressSearchByButton("type", false, false, true);
+                      pressSearchByButton("price", false, false, true);
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
-                    color: isTypeButtonSelected ? Colors.green : Colors.white,
-                    child: const Text("Type"),
+                    color: isPriceButtonSelected ? Colors.green : Colors.white,
+                    child: const Text("Price"),
                   ),
                   const SizedBox(width: 10),
                   MaterialButton(

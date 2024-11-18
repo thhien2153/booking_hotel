@@ -179,8 +179,8 @@ class _BookListingScreenState extends State<BookListingScreen> {
                   Get.snackbar(
                     "Error",
                     "Please fill in all required fields.",
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
+                    backgroundColor: Colors.white,
+                    colorText: Colors.red,
                   );
                 } else {
                   try {
@@ -210,8 +210,8 @@ class _BookListingScreenState extends State<BookListingScreen> {
                     Get.snackbar(
                       "Success",
                       "Your booking has been confirmed!",
-                      backgroundColor: Colors.green,
-                      colorText: Colors.white,
+                      backgroundColor: Colors.white,
+                      colorText: Colors.black,
                     );
 
                     // Đóng dialog

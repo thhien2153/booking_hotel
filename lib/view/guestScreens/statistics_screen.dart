@@ -1,16 +1,19 @@
+import 'package:bookinghotel/model/app_constants.dart';
+import 'package:bookinghotel/model/booking_model.dart';
+import 'package:bookinghotel/model/posting_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class AdminHome extends StatefulWidget {
-  const AdminHome({super.key});
+class StatisticScreen extends StatefulWidget {
+  const StatisticScreen({super.key});
 
   @override
-  State<AdminHome> createState() => _AdminHomeState();
+  State<StatisticScreen> createState() => _StatisticScreenState();
 }
 
-class _AdminHomeState extends State<AdminHome> {
-  int userCount = 0;
+class _StatisticScreenState extends State<StatisticScreen> {
+  // int userCount = 0;
   int postingCount = 0;
   int bookingCount = 0;
 
@@ -21,18 +24,14 @@ class _AdminHomeState extends State<AdminHome> {
   }
 
   Future<void> _fetchData() async {
-    // Fetch user count
-    var userSnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    var postingSnapshot =
-        await FirebaseFirestore.instance.collection('postings').get();
-    var bookingSnapshot =
-        await FirebaseFirestore.instance.collection('bookings').get();
+    var userModel = AppConstants.currentUser;
+
+    List<PostingModel> postings = await userModel.getPostings();
+    List<BookingModel> bookings = await userModel.getBookings();
 
     setState(() {
-      userCount = userSnapshot.docs.length;
-      postingCount = postingSnapshot.docs.length;
-      bookingCount = bookingSnapshot.docs.length;
+      postingCount = postings.length;
+      bookingCount = bookings.length;
     });
   }
 
@@ -42,34 +41,7 @@ class _AdminHomeState extends State<AdminHome> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 6,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: AppBar(
-            title: Text(
-              'Statistics Page',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            elevation: 1,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {},
-              ),
-            ],
-          ),
+          decoration: BoxDecoration(),
         ),
       ),
       body: SingleChildScrollView(
@@ -80,9 +52,10 @@ class _AdminHomeState extends State<AdminHome> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoCard(userCount.toString(), "Users", Colors.blue),
                 _buildInfoCard(
                     postingCount.toString(), "Postings", Colors.purple),
+                _buildInfoCard(
+                    bookingCount.toString(), "Bookings", Colors.blue),
               ],
             ),
             SizedBox(height: 20),
@@ -90,9 +63,9 @@ class _AdminHomeState extends State<AdminHome> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildCircularIndicator(
-                    "Bookings", bookingCount / 100.0, Colors.blue),
+                    "Booking", bookingCount / 100.0, Colors.blue),
                 _buildCircularIndicator(
-                    "Postings", postingCount / 100.0, Colors.green),
+                    "Posting", postingCount / 100.0, Colors.green),
               ],
             ),
             SizedBox(height: 20),

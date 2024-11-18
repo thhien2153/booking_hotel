@@ -54,4 +54,34 @@ class ConversationModel {
         .doc('converstations/${id}')
         .update(conversationData);
   }
+
+  getConversationInfoFromFirestore(DocumentSnapshot snapshot) {
+    id = snapshot.id;
+
+    String lastMessageText = snapshot['lastMessageText'] ?? "";
+    Timestamp lastMessageDateTimestamp =
+        snapshot['lastMessageDateTime'] ?? Timestamp.now();
+    DateTime lastMessageDateTime = lastMessageDateTimestamp.toDate();
+    lastMessage = MessageModel();
+    lastMessage!.dateTime = lastMessageDateTime;
+    lastMessage!.text = lastMessageText;
+
+    List<String> userIDs = List<String>.from(snapshot['userIDs']) ?? [];
+    List<String> userNames = List<String>.from(snapshot['userNames']) ?? [];
+    otherContact = ContactModel();
+
+    for (String userID in userIDs) {
+      if (userID != AppConstants.currentUser!.id) {
+        this.otherContact!.id = userID;
+        break;
+      }
+    }
+
+    for (String name in userNames) {
+      if (name != AppConstants.currentUser.getFullNameOfUser()) {
+        otherContact!.firstName = name.split(" ")[0];
+        otherContact!.lastName = name.split(" ")[1];
+      }
+    }
+  }
 }

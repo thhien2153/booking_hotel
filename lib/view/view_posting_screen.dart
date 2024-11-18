@@ -77,9 +77,15 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
         title: Text('Posting Information'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.save, color: Colors.white),
+            icon: const Icon(Icons.favorite_outline, color: Colors.white),
             onPressed: () {
               AppConstants.currentUser.addSavePosting(posting!);
+              Get.snackbar(
+                "Success",
+                "Your booking has been confirmed!",
+                backgroundColor: Colors.white,
+                colorText: Colors.black,
+              );
             },
           ),
           PopupMenuButton<String>(

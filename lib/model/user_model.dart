@@ -45,6 +45,54 @@ class UserModel extends ContactModel {
     myPostings = [];
   }
 
+  createContactFromUser() {
+    return ContactModel(
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      displayImage: displayImage,
+    );
+  }
+
+  Future<List<PostingModel>> getPostings() async {
+    List<PostingModel> postingList = [];
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('postings')
+        .where('hostID', isEqualTo: id)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      PostingModel posting = PostingModel(id: doc.id);
+      await posting.getPostingInfoFromSnapshot(doc);
+      postingList.add(posting);
+    }
+
+    return postingList;
+  }
+
+  Future<List<BookingModel>> getBookings() async {
+    List<BookingModel> bookingList = [];
+    List<PostingModel> postings = await getPostings();
+    List<String> postingIDs = postings.map((posting) => posting.id!).toList();
+
+    for (String postingID in postingIDs) {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('bookings')
+          .where('postingID', isEqualTo: postingID)
+          .get();
+
+      for (var doc in snapshot.docs) {
+        BookingModel booking = BookingModel();
+        booking.id = doc.id;
+        booking.dates = List<DateTime>.from(
+            doc['dates'].map((date) => DateTime.parse(date)));
+        bookingList.add(booking);
+      }
+    }
+
+    return bookingList;
+  }
+
   addPostingToMyPostings(PostingModel posting) async {
     myPostings!.add(posting);
 

@@ -1,6 +1,8 @@
 import 'package:bookinghotel/global.dart';
 import 'package:bookinghotel/model/app_constants.dart';
+import 'package:bookinghotel/view/guestScreens/user_profile_screen.dart';
 import 'package:bookinghotel/view/guest_home_screen.dart';
+import 'package:bookinghotel/view/login_screen.dart';
 import 'package:bookinghotel/view_model/user_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +39,60 @@ class _AccountScreenState extends State<AccountScreen> {
 
       Get.to(HostHomeScreen());
     }
+  }
+
+  Future<void> logout() async {
+    try {
+      // Xử lý đăng xuất
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Logout Failed'),
+          content: Text(error.toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> showLogoutConfirmationDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Do you want to log out of this account?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              child: const Text('No'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog
+                logout(); // Thực hiện logout
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -116,12 +172,18 @@ class _AccountScreenState extends State<AccountScreen> {
                 ListView(
                   shrinkWrap: true,
                   children: [
-                    //Personal Information Button
+                    // Personal Information Button
                     Container(
                       decoration: const BoxDecoration(color: Colors.green),
                       child: MaterialButton(
                         height: MediaQuery.of(context).size.height / 9,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserProfileScreen()),
+                          );
+                        },
                         child: const ListTile(
                           contentPadding: EdgeInsets.all(0.0),
                           leading: Text(
@@ -180,7 +242,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       child: MaterialButton(
                         height: MediaQuery.of(context).size.height / 9,
                         onPressed: () {
-                          modifyHostingMode();
+                          showLogoutConfirmationDialog();
                         },
                         child: const ListTile(
                           contentPadding: EdgeInsets.all(0.0),

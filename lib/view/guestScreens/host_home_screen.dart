@@ -1,6 +1,6 @@
 import 'package:bookinghotel/view/guestScreens/account_screen.dart';
 import 'package:bookinghotel/view/guestScreens/explore_screen.dart';
-import 'package:bookinghotel/view/guestScreens/inbox_screen.dart';
+import 'package:bookinghotel/view/guestScreens/statistics_screen.dart';
 import 'package:bookinghotel/view/guestScreens/saved_listings_screen.dart';
 import 'package:bookinghotel/view/guestScreens/trips_screen.dart';
 import 'package:bookinghotel/view/hostScreens/bookings_screen.dart';
@@ -21,14 +21,14 @@ class _HostHomeScreenState extends State<HostHomeScreen> {
   final List<String> screenTitles = [
     'Bookings',
     'My Postings',
-    'Inbox',
+    'Statistics',
     'Profile',
   ];
 
   final List<Widget> screens = [
     const BookingsScreen(),
     const MyPostingsScreen(),
-    const InboxScreen(),
+    const StatisticScreen(),
     const AccountScreen(),
   ];
 

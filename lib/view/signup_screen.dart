@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:bookinghotel/global.dart';
+import 'package:bookinghotel/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
           decoration: const BoxDecoration(color: Colors.green),
         ),
         title: const Text(
-          "LOGIN PAGE",
+          "SIGN UP PAGE",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -53,9 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Image.asset(
               "images/signup.png",
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             const Center(
               child: Text(
                 "SIGN UP PAGE",
@@ -72,131 +70,50 @@ class _SignupScreenState extends State<SignupScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Form(
                 key: _formkey,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration: const InputDecoration(labelText: "Email"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTextField(
                         controller: _emailTextEditingController,
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter your Email";
-                          }
-                          return null;
-                        },
+                        hintText: "Email",
+                        keyboardType: TextInputType.emailAddress,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: "Password"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _passwordTextEditingController,
+                        hintText: "Password",
                         obscureText: true,
-                        validator: (valuePassword) {
-                          if (valuePassword!.length < 5) {
-                            return "Password too weak";
-                          }
-                          return null;
-                        },
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: "First Name"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _firstNameTextEditingController,
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter your First Name!";
-                          }
-                          return null;
-                        },
-                        textCapitalization: TextCapitalization.words,
+                        hintText: "First Name",
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: "Last Name"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _lastNameTextEditingController,
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter your Last Name!";
-                          }
-                          return null;
-                        },
-                        textCapitalization: TextCapitalization.words,
+                        hintText: "Last Name",
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration: const InputDecoration(labelText: "City"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _cityTextEditingController,
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter your City name!";
-                          }
-                          return null;
-                        },
-                        textCapitalization: TextCapitalization.words,
+                        hintText: "City",
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration: const InputDecoration(labelText: "Country"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _countryTextEditingController,
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Please enter your Country Name!";
-                          }
-                          return null;
-                        },
-                        textCapitalization: TextCapitalization.words,
+                        hintText: "Country",
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        decoration: const InputDecoration(labelText: "Bio"),
-                        style: const TextStyle(
-                          fontSize: 25,
-                        ),
-                        maxLines: 5,
+                      const SizedBox(height: 15),
+                      _buildTextField(
                         controller: _bioTextEditingController,
-                        textCapitalization: TextCapitalization.words,
+                        hintText: "Bio",
+                        maxLines: 3,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -218,40 +135,54 @@ class _SignupScreenState extends State<SignupScreen> {
                     ? const Icon(Icons.add_a_photo_outlined)
                     : CircleAvatar(
                         radius: MediaQuery.of(context).size.width / 5.0,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.green,
-                          backgroundImage: FileImage(imageFileOfUser!),
-                          radius: MediaQuery.of(context).size.width / 5.0,
-                        ),
+                        backgroundColor: Colors.green,
+                        backgroundImage: FileImage(imageFileOfUser!),
                       ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 40),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (!_formkey.currentState!.validate() ||
                       imageFileOfUser == null) {
-                    Get.snackbar("Field Missing",
-                        "Please choose image and fill out complete sign up form.");
+                    Get.snackbar(
+                      "Field Missing",
+                      "Please choose an image and fill out the complete sign-up form.",
+                    );
                     return;
                   }
-                  if (_emailTextEditingController.text.isEmpty &&
-                      _passwordTextEditingController.text.isEmpty) {
-                    Get.snackbar("Field Missing",
-                        "Please fill out complete sign up form.");
-                    return;
+
+                  try {
+                    bool isSuccess = await userViewModel.signUp(
+                      _emailTextEditingController.text.trim(),
+                      _passwordTextEditingController.text.trim(),
+                      _firstNameTextEditingController.text.trim(),
+                      _lastNameTextEditingController.text.trim(),
+                      _cityTextEditingController.text.trim(),
+                      _countryTextEditingController.text.trim(),
+                      _bioTextEditingController.text.trim(),
+                      imageFileOfUser!,
+                    );
+
+                    if (isSuccess) {
+                      Get.snackbar(
+                        "Success",
+                        "Account created successfully! Redirecting to login page...",
+                      );
+                      Get.off(() => const LoginScreen());
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Sign-up failed. Please try again.",
+                      );
+                    }
+                  } catch (e) {
+                    Get.snackbar(
+                      "Error",
+                      "An unexpected error occurred: $e",
+                    );
                   }
-                  userViewModel.signUp(
-                    _emailTextEditingController.text.trim(),
-                    _passwordTextEditingController.text.trim(),
-                    _firstNameTextEditingController.text.trim(),
-                    _lastNameTextEditingController.text.trim(),
-                    _cityTextEditingController.text.trim(),
-                    _countryTextEditingController.text.trim(),
-                    _bioTextEditingController.text.trim(),
-                    imageFileOfUser!,
-                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -267,11 +198,30 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 60,
-            ),
+            const SizedBox(height: 60),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(),
+        fillColor: Colors.white,
+        filled: true,
       ),
     );
   }

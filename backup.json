@@ -1,0 +1,170 @@
+{
+    "__collections__":
+{
+     "bookings":
+{
+    "3U2OSsLXWr8wjXckpTqW":
+{
+    "postingID":"WHPsHMd83wqrSC58I3ET",
+    "note":"",
+    "createdAt":"2024-11-17T13:07:46.592076",
+    "phone":"0978542136",
+    "name":"Lê Thị Thảo",
+    "dates":["2024-11-20T00:00:00.000","2024-11-21T00:00:00.000"],
+    "userID":"tBlHJdynHZOCqEKQ9KA28n5dsh02",
+    "email":"lethao@gmail.com",
+    "__collections__":{}
+},
+
+
+    "8Xt1V55G6yFS0c5WPWZF":
+{
+ "postingID":"w8kAYSWYtXxW3EJ56KJj",
+ "note":"",
+ "createdAt":"2024-11-17T10:07:45.460337",
+ "phone":"0987142536",
+ "name":"Thị Thanh Hiền Nguyễn",
+ "dates":["2024-12-01T00:00:00.000","2024-12-02T00:00:00.000"],
+ "userID":"QKi1GaNrB1XoQbLAVDlRWDT0mds2",
+ "email":"tthanhhien2105@gmail.com","__collections__":{}
+},
+ "MPmKpZPLyZexl6Jed6g0":
+ {
+"postingID":"w8kAYSWYtXxW3EJ56KJj",
+"note":"No",
+"createdAt":"2024-11-17T10:35:00.442547",
+"phone":"0358363528","name":"Thị Thanh Hiền Nguyễn",
+"dates":["2024-11-17T00:00:00.000","2024-11-18T00:00:00.000"],
+"userID":"QKi1GaNrB1XoQbLAVDlRWDT0mds2",
+"email":"nguyenthienhanh2105@gmail.com",
+"__collections__":{}
+},
+"RclxiMf7Z3CjcvUu0QeF":{
+    "postingID":"w8kAYSWYtXxW3EJ56KJj",
+    "note":"","createdAt":"2024-11-17T00:07:36.397524",
+    "phone":"0794631258","name":"Thị Thanh Hiền Nguyễn",
+    "dates":["2024-11-29T00:00:00.000","2024-11-30T00:00:00.000"],
+    "userID":"tBlHJdynHZOCqEKQ9KA28n5dsh02",
+    "email":"tthanhhien2105@gmail.com",
+    "__collections__":{}},
+    "T6afADb0FJVMQQM7MYXj":{
+        "postingID":"w8kAYSWYtXxW3EJ56KJj",
+        "note":"",
+        "createdAt":"2024-11-16T23:29:33.454136",
+        "phone":"0978451362",
+        "name":"Thị Thanh Hiền Nguyễn",
+        "dates":["2024-11-22T00:00:00.000","2024-11-23T00:00:00.000"],
+        "userID":"tBlHJdynHZOCqEKQ9KA28n5dsh02",
+        "email":"tthanhhien@gmail.com","__collections__":{}},
+        "kwZUp5GemmSSdBsYd9BW":{
+            "postingID":"w8kAYSWYtXxW3EJ56KJj",
+            "note":"",
+            "createdAt":"2024-11-17T08:16:47.009804",
+            "phone":"0787949",
+            "name":"Vy Vy",
+            "dates":["2024-12-26T00:00:00.000","2024-12-27T00:00:00.000"],
+            "userID":"tBlHJdynHZOCqEKQ9KA28n5dsh02",
+            "email":"tgaagaf","__collections__":{}},
+            "oN2MIBxUtosjmymrml9z":{
+                "postingID":"WHPsHMd83wqrSC58I3ET",
+                "note":"","createdAt":"2024-11-17T21:06:27.639825",
+                "phone":"0978452136","name":"Thị Thanh Hiền Nguyễn",
+                "dates":["2024-12-08T00:00:00.000","2024-12-09T00:00:00.000"],
+                "userID":"QKi1GaNrB1XoQbLAVDlRWDT0mds2",
+                "email":"thhien@gmail.com","__collections__":{}},
+                "oWFAiAbcpTh80IxEcapv":
+                {"postingID":"w8kAYSWYtXxW3EJ56KJj",
+                "note":"",
+                "createdAt":"2024-11-16T23:47:07.122489",
+                "phone":"0976431258","name":"Thị Thanh Hiền Nguyễn",
+                "dates":["2024-11-27T00:00:00.000","2024-11-28T00:00:00.000"],
+                "userID":"QKi1GaNrB1XoQbLAVDlRWDT0mds2",
+                "email":"thhien.21@gmail.com","__collections__":{}},
+                "yRjGhCKhEy7XHrzSuL73":
+                {
+                "postingID":"w8kAYSWYtXxW3EJ56KJj",
+                "note":"","createdAt":"2024-11-16T22:03:21.334769",
+                "phone":"0794861325",
+                "name":"Lê Thu Thảo ",
+                "dates":["2024-11-19T00:00:00.000","2024-11-20T00:00:00.000","2024-11-21T00:00:00.000"],
+                "userID":"tBlHJdynHZOCqEKQ9KA28n5dsh02",
+                "email":"lethao@gmail.com","__collections__":{}}},
+
+
+                "postings":{"WHPsHMd83wqrSC58I3ET":{
+"amenities":["Tivi"," Air-conditioner "],
+"country":"","address":"370 Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, TP Đà Nẵng ",
+"imageNames":["image0.png","image1.png","image2.png","image3.png","image4.png"],
+"rating":3.5,"hostID":"0EUBz10kMIbpBhDw2z0BmUm9bPI2",
+"bathrooms":{"half":0,"full":1},
+"type":"","price":350000,
+"name":"Happy Home",
+"beds":{"small":1,"large":0,"medium":1},
+"city":"Đà Nẵng",
+"description":"Large","__collections__":{}},
+"w8kAYSWYtXxW3EJ56KJj":
+{
+    "country":"",
+    "imageNames":["image0.png","image1.png","image2.png"],
+    "rating":3.5,
+    "description":"This is a hotel near the airport, an ideal place to stay while waiting for your next flight. Here, design and architecture are key elements that may captivate you. With its unique setting, our hotel will provide you with a pleasant retreat throughout your stay.",
+    "hostID":"QKi1GaNrB1XoQbLAVDlRWDT0mds2",
+    "bathrooms":{"half":0,"full":1},
+    "type":"",
+    "price":215000,
+    "name":"Thhien Home",
+    "beds":{"small":1,"large":0,"medium":1},
+    "amenities":["TVs","  Air-conditioned "],
+    "address":"20 Lê Thiện Trị, Hoà Hải, Ngũ Hành Sơn, TP Đà Nẵng ",
+    "city":"Đà Nẵng","__collections__":{}}},"users":
+    {"01RKmEBIemZmPJPV85E9DMSUDPd2":
+    {
+        "myPostingIDs":[],
+        "savedPostingIDs":[],
+        "country":"Việt Nam",
+        "firstName":"Admin",
+        "lastName":"Account",
+        "earnings":0,
+        "city":"Đà Nẵng",
+        "bio":"Hello World",
+        "email":"tthanhhien.tivi@gmail.com",
+        "role":"admin","isHost":true
+        ,"__collections__":{}},
+        "0EUBz10kMIbpBhDw2z0BmUm9bPI2":{
+            "savedPostingIDs":[],
+            "country":"Việt Nam",
+            "firstName":"Trâm",
+            "lastName":"Trần",
+            "earnings":0,
+            "role":"user",
+            "city":"Hội An",
+            "bio":"Hi Everyone",
+            "email":"minhtram@gmail.com",
+            "isHost":true,
+            "myPostingIDs":["w8kAYSWYtXxW3EJ56KJj","WHPsHMd83wqrSC58I3ET"]
+            ,"__collections__":{}},
+            "QKi1GaNrB1XoQbLAVDlRWDT0mds2":{
+                "savedPostingIDs":[],
+                "country":"Việt Nam",
+                "firstName":"Thanh",
+                "earnings":0,
+                "role":"user",
+                "city":"Hà Tĩnh",
+                "email":"thhien.21@gmail.com",
+                "isHost":true,
+                "myPostingIDs":["w8kAYSWYtXxW3EJ56KJj"],
+                "bio":"Hello everyone, welcome to my hotel",
+                "lastName":"Hiền","__collections__":{}},
+                "tBlHJdynHZOCqEKQ9KA28n5dsh02":{
+                    "myPostingIDs":[],
+                    "savedPostingIDs":[],
+                    "country":"Việt Nam",
+                    "firstName":"Thảo",
+                    "lastName":"Lê",
+                    "earnings":0,
+                    "role":"user",
+                    "city":"Quảng Nam",
+                    "bio":"Hey, What's Up?????",
+                    "email":"lethao@gmail.com",
+                    "isHost":true,
+                    "__collections__":{}}}}}

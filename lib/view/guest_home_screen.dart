@@ -1,6 +1,6 @@
 import 'package:bookinghotel/view/guestScreens/account_screen.dart';
 import 'package:bookinghotel/view/guestScreens/explore_screen.dart';
-import 'package:bookinghotel/view/guestScreens/inbox_screen.dart';
+import 'package:bookinghotel/view/guestScreens/statistics_screen.dart';
 import 'package:bookinghotel/view/guestScreens/saved_listings_screen.dart';
 import 'package:bookinghotel/view/guestScreens/trips_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
     'Explore',
     'Saved',
     'Trips',
-    'Inbox',
+    // 'Inbox',
     'Profile',
   ];
 
@@ -27,7 +27,7 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
     const ExploreScreen(),
     const SavedListingsScreen(),
     const TripsScreen(),
-    const InboxScreen(),
+    // const InboxScreen(),
     const AccountScreen(),
   ];
 
@@ -76,10 +76,10 @@ class _GuestHomeScreenState extends State<GuestHomeScreen> {
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           customNavigationBarItem(0, Icons.search, screenTitles[0]),
-          customNavigationBarItem(1, Icons.favorite_outline, screenTitles[1]),
+          customNavigationBarItem(1, Icons.favorite, screenTitles[1]),
           customNavigationBarItem(2, Icons.home_outlined, screenTitles[2]),
-          customNavigationBarItem(3, Icons.chat, screenTitles[3]),
-          customNavigationBarItem(4, Icons.person_outlined, screenTitles[4]),
+          // customNavigationBarItem(3, Icons.chat, screenTitles[3]),
+          customNavigationBarItem(3, Icons.person_outlined, screenTitles[3]),
         ],
       ),
     );

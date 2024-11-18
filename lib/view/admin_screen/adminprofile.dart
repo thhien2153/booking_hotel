@@ -2,7 +2,6 @@ import 'package:bookinghotel/model/app_constants.dart';
 import 'package:bookinghotel/view/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// Adjust this import
 
 class AdminProfile extends StatefulWidget {
   const AdminProfile({super.key});
@@ -12,17 +11,70 @@ class AdminProfile extends StatefulWidget {
 }
 
 class _AdminProfileState extends State<AdminProfile> {
-  // Method to fetch user data from Firestore
+  // Phương thức lấy dữ liệu người dùng từ Firestore
   Future<DocumentSnapshot> _getUserData() async {
-    // Ensure AppConstants.currentUser.id is not null
     if (AppConstants.currentUser.id == null) {
       throw Exception('User ID is null, please log in first');
     }
-    String userId = AppConstants.currentUser.id!; // Get current user ID
+    String userId = AppConstants.currentUser.id!;
     return await FirebaseFirestore.instance
         .collection("users")
         .doc(userId)
         .get();
+  }
+
+  Future<void> logout() async {
+    try {
+      // Xử lý đăng xuất
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Logout Failed'),
+          content: Text(error.toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> showLogoutConfirmationDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Do you want to log out of this account?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog
+              },
+              child: const Text('No'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog
+                logout(); // Thực hiện logout
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -47,7 +99,6 @@ class _AdminProfileState extends State<AdminProfile> {
             return const Center(child: Text("User data not found"));
           }
 
-          // Extract user data from Firestore
           var userData = snapshot.data!;
           var firstName = userData['firstName'] ?? 'N/A';
           var lastName = userData['lastName'] ?? 'N/A';
@@ -61,7 +112,6 @@ class _AdminProfileState extends State<AdminProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Profile picture (optional placeholder here)
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.green,
@@ -69,8 +119,6 @@ class _AdminProfileState extends State<AdminProfile> {
                       const Icon(Icons.person, size: 50, color: Colors.white),
                 ),
                 const SizedBox(height: 20),
-
-                // Display user information
                 Text(
                   'Name: $firstName $lastName',
                   style: const TextStyle(
@@ -85,18 +133,11 @@ class _AdminProfileState extends State<AdminProfile> {
                 const SizedBox(height: 8),
                 Text('Bio: $bio', style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 20),
-
-                // Logout button
                 Align(
                   alignment: Alignment.center,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Ensure user is logged out and session is cleared
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
+                      showLogoutConfirmationDialog(); // Hiển thị cửa sổ xác nhận
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
